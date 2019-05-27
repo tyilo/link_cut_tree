@@ -198,7 +198,7 @@ class Node:
 			self.update_augmentation()
 
 
-	def lc_access(self):
+	def lc_expose(self):
 		'''
 		Makes `self` root of its auxiliary tree `T` and `T` the root of the tree of augmented trees.
 		`T` will be a binary search tree
@@ -229,7 +229,7 @@ class Node:
 		Returns the root of the represented tree.
 		'''
 
-		self.lc_access()
+		self.lc_expose()
 		r = self.get_smallest()
 		r.splay()
 		return r
@@ -247,7 +247,7 @@ class Node:
 			`left`, which is a node in the other represented tree.
 		'''
 
-		self.lc_access()
+		self.lc_expose()
 
 		l = self.left
 		assert l != None, "Can't cut the root of the represented tree"
@@ -269,10 +269,10 @@ class Node:
 			`self` is the root of its represented tree.
 		'''
 
-		self.lc_access()
+		self.lc_expose()
 		assert self.left == None, "self is not the root of the represented tree"
 
-		v.lc_access()
+		v.lc_expose()
 
 		assert self.parent == None and self.path_parent == None, "Can't link two nodes in the same represented tree"
 
@@ -282,7 +282,7 @@ class Node:
 
 
 	def lc_path_aggregate(self):
-		self.lc_access()
+		self.lc_expose()
 		return self.augmentation
 
 
@@ -292,7 +292,7 @@ class Node:
 		This makes `self` the new root of the represented tree.
 		'''
 
-		self.lc_access()
+		self.lc_expose()
 		self.reversed = True
 
 
@@ -304,8 +304,8 @@ class Node:
 			`self` and `v` must be in the same represented tree.
 		'''
 
-		self.lc_access()
-		v.lc_access()
+		self.lc_expose()
+		v.lc_expose()
 
 		r = self.get_splay_root()
 		if r == v:
