@@ -104,5 +104,38 @@ class TestEvert(unittest.TestCase):
 		self.assertEqual(nodes['h'].lc_path_aggregate(), 7)
 
 
+class TestLCA(unittest.TestCase):
+	def test_lca(self):
+		nodes = {}
+		for c in map(chr, range(ord('a'), ord('l') + 1)):
+			nodes[c] = Node(c)
+
+		build_link_cut_tree(
+			(nodes['a'], [
+				(nodes['b'], [
+					(nodes['e'], [
+						(nodes['h'], []),
+					]),
+					(nodes['f'], []),
+				]),
+				(nodes['c'], []),
+				(nodes['d'], [
+					(nodes['g'], [
+						(nodes['i'], []),
+						(nodes['j'], [
+							(nodes['l'], []),
+						]),
+						(nodes['k'], []),
+					]),
+				]),
+			]))
+
+		self.assertEqual(nodes['a'].lc_lca(nodes['f']), nodes['a'])
+		self.assertEqual(nodes['f'].lc_lca(nodes['a']), nodes['a'])
+		self.assertEqual(nodes['j'].lc_lca(nodes['i']), nodes['g'])
+		self.assertEqual(nodes['h'].lc_lca(nodes['k']), nodes['a'])
+		self.assertEqual(nodes['h'].lc_lca(nodes['f']), nodes['b'])
+
+
 if __name__ == '__main__':
 	unittest.main()

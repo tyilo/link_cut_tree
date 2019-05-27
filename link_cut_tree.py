@@ -296,6 +296,26 @@ class Node:
 		self.reversed = True
 
 
+	def lc_lca(self, v):
+		'''
+		Returns the lowest common ancestor of `self` and `v` in the represented tree.
+
+		Preconditions:
+			`self` and `v` must be in the same represented tree.
+		'''
+
+		self.lc_access()
+		v.lc_access()
+
+		r = self.get_splay_root()
+		if r == v:
+			return self
+
+		assert r.path_parent.get_splay_root() == v, "Can't get LCA of `self` and `v` in different represented trees"
+
+		return r.path_parent
+
+
 class LinkCutForest:
 	def __init__(self, nodes):
 		self.nodes = nodes
