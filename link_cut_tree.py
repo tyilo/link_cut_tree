@@ -14,11 +14,25 @@ class Node:
 		self.value = value
 		self.path_parent = None
 
+		self.reversed = False
+
 		self.left = left
 		self.right = right
 
 		self.augmentation = None
 		self.update_augmentation()
+
+	def _push_reversed(self):
+		if self.parent:
+			self.parent._push_reversed()
+
+		if self.reversed:
+			self.children = self.children[::-1]
+			for c in self.children:
+				if c:
+					c.reversed = not c.reversed
+
+			self.reversed = False
 
 
 	def __str__(self):
@@ -61,7 +75,7 @@ class Node:
 		self.set_child(1, o)
 
 
-	def traverse_subtree(self, order=Traversal.in_order):
+	def traverse_subtree(self, order=Traversal.in_order, reverse=False):
 		if order == Traversal.pre_order:
 			yield self
 
@@ -69,12 +83,21 @@ class Node:
 			if i == 1 and order == Traversal.in_order:
 				yield self
 
-			c = self.children[i]
+			c = self.children[i ^ self.reversed ^ reverse]
 			if c:
-				yield from c.traverse_subtree(order)
+				yield from c.traverse_subtree(order, reverse ^ self.reversed)
 
 		if order == Traversal.post_order:
 			yield self
+
+
+	def display_str(self):
+		return str(self.value)
+
+
+	def _node_style(self):
+		color = 'red' if self.reversed else 'white'
+		return f'  {id(self)} [label="{self.display_str()}",style=filled,fillcolor="{color}"];'
 
 
 	def print_subtree(self, file=None):
@@ -82,7 +105,7 @@ class Node:
 
 		print('digraph splay {', file=file)
 		for node in self.traverse_subtree():
-			print(f'  {id(node)} [label="{node.value}"];', file=file)
+			print(node._node_style(), file=file)
 
 			for c in node.children:
 				if c:
@@ -125,11 +148,12 @@ class Node:
 
 
 	def splay(self):
-		while self.parent != None:
+		self._push_reversed()
+		while self.parent:
 			i = self.child_index()
 			p = self.parent
 
-			if p.parent == None:
+			if not p.parent:
 				# zig
 				self._rotate_up()
 			else:
@@ -262,17 +286,48 @@ class Node:
 		return self.augmentation
 
 
+	def lc_evert(self):
+		'''
+		Reverse the edges from `self` to the root of the represented tree.
+		This makes `self` the new root of the represented tree.
+		'''
+
+		self.lc_access()
+		self.reversed = True
+
+
 class LinkCutForest:
 	def __init__(self, nodes):
 		self.nodes = nodes
 
 
-	def print(self, file=None):
+	def print_represented_forest(self, file=None):
+		print('digraph link_cut {', file=file)
+		for node in self.nodes:
+			print(node._node_style(), file=file)
+
+			if node.parent:
+				continue
+
+			prev = None
+			for p in node.traverse_subtree(Traversal.in_order):
+				if prev:
+					print(f'  {id(prev)} -> {id(p)};', file=file)
+
+				prev = p
+
+			if node.path_parent:
+				print(f'  {id(node.path_parent)} -> {id(node)};', file=file)
+
+		print('}', file=file)
+
+
+	def print_aux_trees(self, file=None):
 		empty = 0
 
 		print('digraph link_cut {', file=file)
 		for node in self.nodes:
-			print(f'  {id(node)} [label="{node.value}"];', file=file)
+			print(node._node_style(), file=file)
 
 			for c in node.children:
 				if c:
@@ -289,10 +344,11 @@ class LinkCutForest:
 
 
 def build_link_cut_tree(structure, forest=None):
-	if forest == None:
+	if not forest:
 		forest = LinkCutForest([])
 
 	node, children = structure
+	forest.nodes.append(node)
 
 	for c, c_children in children:
 		c.lc_link(node)

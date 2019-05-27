@@ -4,6 +4,13 @@ from link_cut_tree import build_link_cut_tree, Node
 
 
 class PathSumNode(Node):
+	def __init__(self, name, value):
+		super().__init__(value)
+		self.name = name
+
+	def display_str(self):
+		return f'{self.name}: {self.value}'
+
 	def update_augmentation(self):
 		self.augmentation = self.value
 		for c in self.children:
@@ -13,17 +20,17 @@ class PathSumNode(Node):
 
 class TestPathSum(unittest.TestCase):
 	def test_path_sum(self):
-		root = PathSumNode(1 << 0)
-		c1 = PathSumNode(1 << 1)
-		c2 = PathSumNode(1 << 2)
-		c3 = PathSumNode(1 << 6)
+		root = PathSumNode('root', 1 << 0)
+		c1 = PathSumNode('c1', 1 << 1)
+		c2 = PathSumNode('c2', 1 << 2)
+		c3 = PathSumNode('c3', 1 << 6)
 
-		c1_1 = PathSumNode(1 << 3)
+		c1_1 = PathSumNode('c1_1', 1 << 3)
 
-		c2_1 = PathSumNode(1 << 4)
-		c2_2 = PathSumNode(1 << 5)
+		c2_1 = PathSumNode('c2_1', 1 << 4)
+		c2_2 = PathSumNode('c2_2', 1 << 5)
 
-		c2_2_1 = PathSumNode(1 << 6)
+		c2_2_1 = PathSumNode('c2_2_1', 1 << 6)
 
 		build_link_cut_tree(
 			(root, [
@@ -63,6 +70,38 @@ class TestPathSum(unittest.TestCase):
 		self.assertEqual(c1_1.lc_path_aggregate(), c2_2.value + root.value + c1.value + c1_1.value)
 		self.assertEqual(root.lc_get_root(), c2_2)
 		self.assertEqual(c1_1.lc_get_root(), c2_2)
+
+
+class TestEvert(unittest.TestCase):
+	def test_evert(self):
+		nodes = {}
+		for c in map(chr, range(ord('a'), ord('l') + 1)):
+			nodes[c] = PathSumNode(c, 1)
+
+		build_link_cut_tree(
+			(nodes['a'], [
+				(nodes['b'], [
+					(nodes['e'], [
+						(nodes['h'], []),
+					]),
+					(nodes['f'], []),
+				]),
+				(nodes['c'], []),
+				(nodes['d'], [
+					(nodes['g'], [
+						(nodes['i'], []),
+						(nodes['j'], [
+							(nodes['l'], []),
+						]),
+						(nodes['k'], []),
+					]),
+				]),
+			]))
+
+		nodes['j'].lc_evert()
+
+		self.assertEqual(nodes['l'].lc_path_aggregate(), 2)
+		self.assertEqual(nodes['h'].lc_path_aggregate(), 7)
 
 
 if __name__ == '__main__':
