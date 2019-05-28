@@ -262,7 +262,7 @@ class Node:
 
 	def lc_link(self, v):
 		'''
-		Links the two represented trees `self` and `v`, by making `v` a child of `self`.
+		Links the two represented trees `self` and `v`, by making `self` a child of `v`.
 
 		Preconditions:
 			`self` and `v` are not in the same represented tree.
