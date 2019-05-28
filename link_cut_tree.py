@@ -276,9 +276,7 @@ class Node:
 
 		assert self.parent == None and self.path_parent == None, "Can't link two nodes in the same represented tree"
 
-		self.left = v
-
-		v.update_augmentation()
+		self.path_parent = v
 
 
 	def lc_path_aggregate(self):
