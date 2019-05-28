@@ -5,7 +5,7 @@ from link_cut_tree import Node
 
 
 '''
-All of the following tests are from the paper introducing splay trees:1985
+All of the following tests are from the paper introducing splay trees:
 Self-Adjusting Binary Search Trees by Sleator & Tarjan, 1985
 '''
 
