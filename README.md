@@ -25,11 +25,11 @@ To support querying the minimum value in a path, the following class can be used
 
 ```python
 class PathMinNode(Node):
-	def update_augmentation(self):
-		self.augmentation = self.value
-		for c in self.children:
-			if c:
-				self.augmentation = min(self.augmentation, c)
+    def update_augmentation(self):
+        self.augmentation = self.value
+        for c in self.children:
+            if c:
+                self.augmentation = min(self.augmentation, c)
 ```
 
 Now `v.lc_path_aggregate()` can be used to query the minimum value on the path from `v` to the root in the represented tree.
