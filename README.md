@@ -2,10 +2,10 @@
 
 A link/cut tree implemented in python.
 
-All link/cut tree operations on a node is prefixed with `lc_`.
-Other methods are splay operations on the auxiliary tree.
+All link/cut tree operations on a node are prefixed with `lc_`.
+Other methods are splay tree operations on the auxiliary tree.
 
-Supports the following operations in `O(log n)`:
+Supports the following operations in `O(log n)`, where `v` and `w` are nodes:
 
 - `v.lc_get_root()`
 - `v.lc_cut()`
