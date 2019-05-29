@@ -5,7 +5,7 @@ A link/cut tree implemented in python.
 All link/cut tree operations on a node are prefixed with `lc_`.
 Other methods are splay tree operations on the auxiliary tree.
 
-Supports the following operations in `O(log n)`, where `v` and `w` are nodes:
+Supports the following operations in `O(log n)` amortized time, where `v` and `w` are nodes:
 
 - `v.lc_get_root()`
 - `v.lc_cut()`
