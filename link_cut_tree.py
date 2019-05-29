@@ -184,16 +184,20 @@ class Node:
 		return self.get_extreme(True)
 
 
-	def _lc_cut_off_right_subtree(self):
+	def _lc_replace_right_subtree(self, new_right_child):
 		'''
-		Cuts off the right subtree of `self` in the auxiliary tree
-		and puts it into its own auxiliary tree.
+		Replace the right subtree of `self` in the auxiliary tree
+		with `new_right_child`.
+		The old right subtree will become a root in its new auxiliary tree.
 		'''
 
 		if self.right:
 			self.right.path_parent = self
 			self.right.parent = None
-			self.right = None
+
+		self.right = new_right_child
+		if new_right_child:
+			new_right_child.path_parent = None
 
 
 	def lc_expose(self):
@@ -206,16 +210,13 @@ class Node:
 		'''
 
 		self.splay()
-		self._lc_cut_off_right_subtree()
+		self._lc_replace_right_subtree(None)
 
 		while self.path_parent:
 			w = self.path_parent
 			w.splay()
-			w._lc_cut_off_right_subtree()
 
-			w.right = self
-			self.parent = w
-			self.path_parent = None
+			w._lc_replace_right_subtree(self)
 
 			self.splay()
 
