@@ -47,9 +47,11 @@ class SubtreeSumNode(Node):
 		return self.delta_value
 
 
-	def add_to_value(self, delta):
+	def set_value(self, value):
 		self.lc_expose()
+		delta = value - self.value
 		self.delta_value += delta
+		self.value = value
 
 
 class TestSubtreeSum(unittest.TestCase):
@@ -98,7 +100,7 @@ class TestSubtreeSum(unittest.TestCase):
 		for name, node in nodes.items():
 			self.assertEqual(node.get_sum(), sums[name] + diffs.get(name, 0), f'{name}')
 
-		nodes['C'].add_to_value(1 << 8)
+		nodes['C'].set_value(nodes['C'].value + (1 << 8))
 		diffs = {
 			'A': 1 << 8,
 			'B': sums['C'] + (1 << 8),
