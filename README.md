@@ -33,3 +33,14 @@ class PathMinNode(Node):
 ```
 
 Now `v.lc_path_aggregate()` can be used to query the minimum value on the path from `v` to the root in the represented tree.
+
+## Advanced augmentation
+
+Instead of just overriding `update_augmentation`, you can also override `_rotate_up`, `_lc_replace_right_subtree` and `lc_link` to support some more advanced forms of augmentation.
+
+In `test/test_subtree_sum.py` is an example of a link/cut tree, where each node is augmented with the sum of its subtree's values in the represented tree. Note that this is vastly different from just a simple path aggregation.
+
+The nodes supports the following operations in `O(log n)` amortized time:
+
+- `v.get_sum()`: Returns the subtree sum for `v`.
+- `v.set_value(value)`: Sets the value of `v` to `value`. (Subtree sums will be updated).
