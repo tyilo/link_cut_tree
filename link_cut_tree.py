@@ -16,11 +16,11 @@ class Node:
 
 		self.reversed = False
 
+		self.augmentation = None
+
 		self.left = left
 		self.right = right
 
-		self.augmentation = None
-		self.update_augmentation()
 
 	def _push_reversed(self):
 		if self.parent:
@@ -195,8 +195,6 @@ class Node:
 			self.right.parent = None
 			self.right = None
 
-			self.update_augmentation()
-
 
 	def lc_expose(self):
 		'''
@@ -218,8 +216,6 @@ class Node:
 			w.right = self
 			self.parent = w
 			self.path_parent = None
-
-			w.update_augmentation()
 
 			self.splay()
 
@@ -254,8 +250,6 @@ class Node:
 
 		l.parent = None
 		self.left = None
-
-		self.update_augmentation()
 
 		return (self, l)
 
