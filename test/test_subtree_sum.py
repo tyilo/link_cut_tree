@@ -6,12 +6,12 @@ from link_cut_tree import build_link_cut_tree, Node
 class SubtreeSumNode(Node):
 	def __init__(self, name, value):
 		self.name = name
-		self.delta_value = value
+		self.delta_sum = value
 		super().__init__(value)
 
 
 	def display_str(self):
-		return f'{self.name}: {self.delta_value}'
+		return f'{self.name}: {self.delta_sum}'
 
 
 	def _rotate_up(self):
@@ -19,19 +19,19 @@ class SubtreeSumNode(Node):
 		c = self.children[1 - self.child_index()]
 
 		if c:
-			c.delta_value += self.delta_value
+			c.delta_sum += self.delta_sum
 
-		self.delta_value, p.delta_value = self.delta_value + p.delta_value, -self.delta_value
+		self.delta_sum, p.delta_sum = self.delta_sum + p.delta_sum, -self.delta_sum
 
 		super()._rotate_up()
 
 
 	def _lc_replace_right_subtree(self, new_right_child):
 		if self.right:
-			self.right.delta_value += self.delta_value
+			self.right.delta_sum += self.delta_sum
 
 		if new_right_child:
-			new_right_child.delta_value -= self.delta_value
+			new_right_child.delta_sum -= self.delta_sum
 
 		super()._lc_replace_right_subtree(new_right_child)
 
@@ -39,18 +39,18 @@ class SubtreeSumNode(Node):
 	def lc_link(self, v):
 		super().lc_link(v)
 
-		v.delta_value += self.delta_value
+		v.delta_sum += self.delta_sum
 
 
 	def get_sum(self):
 		self.lc_expose()
-		return self.delta_value
+		return self.delta_sum
 
 
 	def set_value(self, value):
 		self.lc_expose()
 		delta = value - self.value
-		self.delta_value += delta
+		self.delta_sum += delta
 		self.value = value
 
 
