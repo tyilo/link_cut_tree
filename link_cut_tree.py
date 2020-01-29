@@ -240,8 +240,7 @@ class Node:
 			`self` is not the root of the represented tree.
 
 		Returns:
-			`self`, which is the root of one of the new represented trees.
-			`left`, which is a node in the other represented tree.
+			`left`, which is the old parent of `self` in the represented tree.
 		'''
 
 		self.lc_expose()
@@ -252,7 +251,7 @@ class Node:
 		l.parent = None
 		self.left = None
 
-		return (self, l)
+		return l
 
 
 	def lc_link(self, v):
